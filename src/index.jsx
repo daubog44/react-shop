@@ -1,3 +1,5 @@
+import { createGlobalStyle } from "styled-components";
+const GlobalStyle = createGlobalStyle`
 body {
   margin: 0;
   padding: 20px 40px;
@@ -25,3 +27,6 @@ a {
 ::-webkit-scrollbar {
   display: none;
 }
+`;
+
+export default GlobalStyle;

@@ -1,4 +1,14 @@
-.cart-dropdown-container {
+import styled from "styled-components";
+import Button from "../../components/button/button.component";
+
+export const EmptyMessage = styled.span`
+  font-size: 18px;
+  margin: 50px auto;
+`;
+
+const StyledButton = styled(Button)``;
+
+export const CartDropdownContainer = styled.div`
   position: absolute;
   width: 240px;
   height: 340px;
@@ -23,7 +33,7 @@
     overflow: auto;
   }
 
-  button {
+  ${StyledButton} {
     margin-top: auto;
   }
-}
+`;

@@ -1,19 +1,15 @@
-import "./button.styles.scss";
-
-const BUTTON_TYPE_CLASSES = {
-  google: "google-sign-in",
-  inverted: "inverted",
-  default: "default",
-};
+import { ButtonStyle, googleTheme, ivertedTheme } from "./button.styles.jsx";
 
 const Button = ({ children, buttonType, ...otherProps }) => {
+  const theme = () => {
+    if (buttonType === "google") return googleTheme;
+    else if (buttonType === "inverted") return ivertedTheme;
+  };
+
   return (
-    <button
-      className={`button-container ${BUTTON_TYPE_CLASSES[buttonType]}`}
-      {...otherProps}
-    >
+    <ButtonStyle theme={theme()} {...otherProps}>
       {children}
-    </button>
+    </ButtonStyle>
   );
 };
 

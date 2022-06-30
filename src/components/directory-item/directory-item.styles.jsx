@@ -1,4 +1,7 @@
-.category-container {
+import styled from "styled-components";
+import {Link} from "react-router-dom";
+
+export const DirectoryItemContainer = styled(Link)`
   min-width: 30%;
   height: 240px;
   flex: 1 1 auto;
@@ -11,13 +14,11 @@
 
   &:hover {
     cursor: pointer;
-
     & .background-image {
       transform: scale(1.1);
       transition: transform 6s cubic-bezier(0.25, 0.45, 0.45, 0.95);
     }
-
-    & .category-body-container {
+    & .directory-item-body {
       opacity: 0.9;
     }
   }
@@ -41,7 +42,7 @@
     background-position: center;
   }
 
-  .category-body-container {
+  .directory-item-body {
     height: 90px;
     padding: 0 25px;
     display: flex;
@@ -65,4 +66,4 @@
       font-size: 16px;
     }
   }
-}
+`;

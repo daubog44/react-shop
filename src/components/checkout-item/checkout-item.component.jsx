@@ -1,4 +1,4 @@
-import "./checkout-item.styles.scss";
+import CheckoutItemContainer from "./checkout-item.styles.jsx";
 import { useContext } from "react";
 import { CartContext } from "../../context/cart.context";
 
@@ -17,7 +17,7 @@ const CheckoutItem = ({ cartItem }) => {
     decrementQuantityFromCart(cartItem);
   };
   return (
-    <div className="checkout-item-container">
+    <CheckoutItemContainer>
       <div className="image-container">
         <img src={imageUrl} alt={`${name}`} />
       </div>
@@ -35,7 +35,7 @@ const CheckoutItem = ({ cartItem }) => {
       <div className="remove-button" onClick={handleRemoveItem}>
         &#10005;
       </div>
-    </div>
+    </CheckoutItemContainer>
   );
 };
 
