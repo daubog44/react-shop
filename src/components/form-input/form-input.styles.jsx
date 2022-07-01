@@ -12,9 +12,6 @@ export const Group = styled.div.attrs((props) => ({
 }))`
   position: relative;
   margin: 45px 0;
-  ${(props) => {
-    console.log(props.children);
-  }}
 
   & .form-input {
     background: none;

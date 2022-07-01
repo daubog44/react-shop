@@ -6,11 +6,20 @@ import {
   ProductCardContainer,
   ButtonCardContainer,
 } from "./product-card.styles.jsx";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
+const analytics = getAnalytics();
 const ProductCard = ({ product }) => {
   const { name, price, imageUrl } = product;
   const { addItemToCart } = useContext(CartContext);
-  const addProductToCart = () => addItemToCart(product);
+  const addProductToCart = () => {
+    logEvent(analytics, "add_to_cart", {
+      currency: "USD",
+      value: price,
+      items: [product],
+    });
+    return addItemToCart(product);
+  };
 
   return (
     <ProductCardContainer>

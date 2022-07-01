@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics, logEvent } from "firebase/analytics";
+import { getAnalytics, logEvent, setUserId } from "firebase/analytics";
 import {
   getAuth,
   signInWithPopup,
@@ -85,6 +85,7 @@ export const getCategoriesAndDocuments = async (collectionName) => {
 export const createUserDocumentFromAuth = async (auth, providerId) => {
   if (!auth) return;
   const userDocRef = doc(db, "users", auth.uid);
+  setUserId(analytics, auth.uid);
   const userSnapshot = await getDoc(userDocRef);
 
   //check if user exists, if exists return document
