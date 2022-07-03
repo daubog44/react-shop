@@ -1,13 +1,24 @@
 import CheckoutItemContainer from "./checkout-item.styles.jsx";
-import { useContext } from "react";
-import { CartContext } from "../../context/cart.context";
 import { getAnalytics, logEvent } from "firebase/analytics";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addItemToCartAction,
+  decrementQuantityFromCartAction,
+  removeItemFromCartAction,
+} from "../../store/cart/cart.action";
+import { selectCartItems } from "../../store/cart/cart.selector";
 
 const analytics = getAnalytics();
 const CheckoutItem = ({ cartItem }) => {
-  const { addItemToCart, decrementQuantityFromCart, removeItemFromCart } =
-    useContext(CartContext);
+  const dispatch = useDispatch();
+  const cartItems = useSelector(selectCartItems);
+  const addItemToCart = (cartItem) =>
+    dispatch(addItemToCartAction(cartItems, cartItem));
+  const removeItemFromCart = (cartItem) =>
+    dispatch(removeItemFromCartAction(cartItems, cartItem));
   const { name, quantity, imageUrl, price } = cartItem;
+  const decrementQuantityFromCart = (cartItem) =>
+    dispatch(decrementQuantityFromCartAction(cartItems, cartItem));
 
   const handleRemoveItem = () => {
     logEvent(analytics, "remove_from_cart", {

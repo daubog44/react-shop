@@ -1,5 +1,10 @@
-import { useContext, useEffect } from "react";
-import { CartContext } from "../../context/cart.context";
+import { useSelector } from "react-redux";
+import {
+  selectIsCartOpen,
+  selectCartItems,
+  selectCartTotal,
+} from "../../store/cart/cart.selector";
+import { useEffect } from "react";
 import {
   CartDropdownContainer,
   EmptyMessage,
@@ -11,16 +16,16 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 
 const analytics = getAnalytics();
 const CartDropdown = () => {
-  const { cartItems, isCartOpen } = useContext(CartContext);
+  const isCartOpen = useSelector(selectIsCartOpen);
+  const cartItems = useSelector(selectCartItems);
+  const cartTotal = useSelector(selectCartTotal);
+
   const navigate = useNavigate();
 
   const goToCheckoutHandler = () => {
     logEvent(analytics, "begin_checkout", {
       currency: "USD",
-      value: cartItems.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      ), // Total Revenue
+      value: cartTotal,
       items: cartItems,
     });
     navigate("/checkout");
@@ -30,13 +35,10 @@ const CartDropdown = () => {
     if (isCartOpen)
       logEvent(analytics, "view_cart", {
         currency: "USD",
-        value: cartItems.reduce(
-          (acc, item) => acc + item.price * item.quantity,
-          0
-        ),
+        value: cartTotal,
         items: cartItems,
       });
-  }, [cartItems, isCartOpen]);
+  }, [isCartOpen, cartItems, cartTotal]);
 
   return (
     <CartDropdownContainer>
