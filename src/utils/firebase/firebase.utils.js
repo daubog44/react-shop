@@ -20,6 +20,7 @@ import {
   writeBatch,
   query,
   getDocs,
+  setLogLevel,
 } from "firebase/firestore";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -38,7 +39,8 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
+export const db = getFirestore(firebaseApp);
 const analytics = getAnalytics(firebaseApp);
 
 const provider = new GoogleAuthProvider();
@@ -47,7 +49,7 @@ provider.setCustomParameters({ prompt: "select_account" });
 export const auth = getAuth();
 export const signIn = () => signInWithPopup(auth, provider);
 export const signInRedirect = () => signInWithRedirect(auth, provider);
-export const db = getFirestore();
+if (process.env.NODE_ENV === "debug") setLogLevel("debug");
 
 export const addCollectionAndDocuments = async (
   collectionKey,
@@ -61,7 +63,6 @@ export const addCollectionAndDocuments = async (
   });
 
   await batches.commit();
-  console.log("Collections and documents added");
 };
 
 export const getCategoriesAndDocuments = async (collectionName) => {
@@ -72,16 +73,17 @@ export const getCategoriesAndDocuments = async (collectionName) => {
   return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
 };
 
-export const createUserDocumentFromAuth = async (auth, providerId) => {
+export const createUserDocumentFromAuth = async (auth, providerId = "auth") => {
   if (!auth) return;
   const userDocRef = doc(db, "users", auth.uid);
   setUserId(analytics, auth.uid);
-  const userSnapshot = await getDoc(userDocRef);
+  let userSnapshot = await getDoc(userDocRef);
+  const { displayName, email } = auth;
+  userSnapshot.data().displayName = displayName;
 
   //check if user exists, if exists return document
   if (!userSnapshot.exists()) {
-    const { displayName, email } = auth;
-    const createdAt = new Date();
+    const createdAt = new Date().toLocaleDateString();
     logEvent(analytics, "sign_up", { method: providerId });
 
     try {
@@ -90,13 +92,14 @@ export const createUserDocumentFromAuth = async (auth, providerId) => {
         email,
         createdAt,
       });
+      userSnapshot = await getDoc(userDocRef);
     } catch (error) {
       console.error("Error creating user document", error);
     }
   } else {
     logEvent(analytics, "login", { method: providerId });
   }
-  return userDocRef;
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -114,3 +117,17 @@ export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        console.log("user", user);
+        resolve(user);
+      },
+      reject
+    );
+  });
+};

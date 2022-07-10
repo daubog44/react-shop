@@ -13,8 +13,9 @@ import Button from "../../components/button/button.component";
 import CartItem from "../cart-item/cart-item.component";
 import { useNavigate } from "react-router-dom";
 import { getAnalytics, logEvent } from "firebase/analytics";
+import { firebaseApp } from "../../utils/firebase/firebase.utils";
 
-const analytics = getAnalytics();
+const analytics = getAnalytics(firebaseApp);
 const CartDropdown = () => {
   const isCartOpen = useSelector(selectIsCartOpen);
   const cartItems = useSelector(selectCartItems);

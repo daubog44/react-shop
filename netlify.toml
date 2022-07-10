@@ -1,0 +1,5 @@
+[dev]
+    functionsPort = 9999
+
+[context.deploy-preview]
+    functionsPort = 9999
