@@ -14,10 +14,10 @@ import { rootSaga } from "./root-saga";
 // root-reducer
 const sagaMiddleware = createSagaMiddleware();
 
-const middlewares = [
-  process.env.NODE_ENV !== "production" ? logger : "",
+const middleWares = [
+  process.env.NODE_ENV !== "production" && logger,
   sagaMiddleware,
-];
+].filter(Boolean);
 
 console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 const composedEnhancer =
@@ -29,7 +29,7 @@ const composedEnhancer =
     })) ||
   compose;
 
-const composedEnhancers = composedEnhancer(applyMiddleware(...middlewares));
+const composedEnhancers = composedEnhancer(applyMiddleware(...middleWares));
 
 const persistConfig = {
   key: "root",
