@@ -30,7 +30,7 @@
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve functions\"",
     "build:dev": "react-scripts build && set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build functions",
-    "build": "react-scripts build && netlify-lambda build functions",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve functions",
