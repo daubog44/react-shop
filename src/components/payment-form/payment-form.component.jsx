@@ -10,7 +10,7 @@ import {
   FormContainer,
   PaymentButton,
 } from "./payment-form.styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const PaymentForm = () => {
   const currentUser = useSelector(selectCurrentUser);
@@ -23,30 +23,29 @@ const PaymentForm = () => {
   }
   const stripe = useStripe();
   const elements = useElements();
-  useEffect(() => {
-    if (!loading && !currentUser) {
-      alert("Please sign in to continue");
-    }
-  }, [loading, currentUser]);
-  console.log("displayName", displayName);
 
   const paymentHandler = async (e) => {
     e.preventDefault();
     if (!stripe || !elements || !displayName) {
       return;
     }
+    if (!loading && !currentUser) {
+      alert("Please sign in to continue");
+    }
     setProcessingPayment(true);
 
-    const res = await fetch(
-      "http://127.0.0.1:9999/.netlify/functions/stripe-subscription",
-      {
+    let res;
+    try {
+      res = await fetch("/.netlify/functions/stripe-subscription.js", {
         method: "POST",
         body: JSON.stringify({
           amount: amount * 100,
         }),
-      }
-    ).then((res) => res.json());
-
+      }).then((res) => res.json());
+    } catch (error) {
+      alert(error.message);
+      setProcessingPayment(false);
+    }
     const {
       paymentIntent: { client_secret },
     } = res;
@@ -66,6 +65,7 @@ const PaymentForm = () => {
     console.log("paymentIntent", paymentIntent);
     if (paymentIntent.error) {
       alert(paymentIntent.error.message);
+      setProcessingPayment(false);
     } else if (paymentIntent.paymentIntent.status === "succeeded") {
       alert("Payment successful");
     }

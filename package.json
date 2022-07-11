@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "dotenv": "^16.0.1",
     "firebase": "^9.8.4",
+    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
@@ -27,10 +28,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "concurrently \"react-scripts start\" \"set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve functions\"",
+    "build": "react-scripts build && set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build functions",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve functions",
+    "build:lambda": "set NODE_OPTIONS=--openssl-legacy-provider &&netlify-lambda build functions"
   },
   "eslintConfig": {
     "extends": [
@@ -52,5 +55,10 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.2",
+    "netlify-lambda": "^2.0.15",
+    "npm-run-all": "^4.1.5"
   }
 }
