@@ -34,18 +34,22 @@ const PaymentForm = () => {
     }
     setProcessingPayment(true);
 
-    let res;
+    let res,
+      url = "/.netlify/functions/stripe-subscription.js",
+      body = {
+        amount: amount * 100,
+      };
+    // console.log(body, url);
     try {
-      res = await fetch("/.netlify/functions/stripe-subscription.js", {
+      res = await fetch(url, {
         method: "POST",
-        body: JSON.stringify({
-          amount: amount * 100,
-        }),
+        body: JSON.stringify(body),
       }).then((res) => res.json());
     } catch (error) {
       alert(error.message);
       setProcessingPayment(false);
     }
+    console.log(res);
     const {
       paymentIntent: { client_secret },
     } = res;
