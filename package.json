@@ -28,13 +28,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve functions\"",
-    "build:dev": "react-scripts build && set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build functions",
+    "start": "concurrently \"react-scripts start\" \"set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve netlify/functions\"",
+    "build:dev": "react-scripts build && set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build netlify/functions",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve functions",
-    "build:lambda": "set NODE_OPTIONS=--openssl-legacy-provider &&netlify-lambda build functions"
+    "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve netlify/functions",
+    "build:lambda": "set NODE_OPTIONS=--openssl-legacy-provider &&netlify-lambda build netlify/functions"
   },
   "eslintConfig": {
     "extends": [

@@ -35,14 +35,20 @@ const PaymentForm = () => {
     setProcessingPayment(true);
 
     let res,
-      url = "/.netlify/functions/stripe-subscription.js",
+      url = "/.netlify/functions/stripe-subscription",
       body = {
         amount: amount * 100,
+      },
+      headers = {
+        "Content-Type": "application/json",
       };
+    let t = JSON.stringify(JSON.stringify(body));
+    console.log(JSON.parse(t));
     // console.log(body, url);
     try {
       res = await fetch(url, {
         method: "POST",
+        headers: headers,
         body: JSON.stringify(body),
       }).then((res) => res.json());
     } catch (error) {
