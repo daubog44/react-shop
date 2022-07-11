@@ -3,7 +3,7 @@
 
 [build]
   functionsPort = 9000
-  Command = "npm run build"
+  Command = "npm run build && npm run build:lambda"
   Functions = "lambda"
   Publish = "build"
   environment = {REACT_APP_STRIPE_PUBLISHED_KEY="pk_test_51LJ59CCGOvrym5ItIDgCoxJROygA3eBZ  xMoppKW1ttgI5MVhJX3da1HLDb02u3Ki1MlWMHX1uIO22nNbHxN25BOK00hyn6fz0V",STRIPE_SECRET_KEY="sk_test_51LJ59CCGOvrym5ItazMPvT6iaDuHnAL4LmpiWeVMOQ5DmRHsttRevG3KZlbqdLivtQijDQFkUsgHXjaAEa35nNdM00G21w9vD0",NODE_VERSION = "18.0.0"}
