@@ -36,7 +36,7 @@
     "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve netlify/functions",
     "build:lambda:dev": "set NODE_OPTIONS=--openssl-legacy-provider &&netlify-lambda build netlify/functions",
     "build:lambda:prod": "netlify-lambda build netlify/functions",
-    "build": "run-p build:lambda:dev build:react"
+    "build": "react-scripts build && set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build netlify/functions"
   },
   "eslintConfig": {
     "extends": [
