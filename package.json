@@ -37,7 +37,7 @@
     "eject": "react-scripts eject",
     "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve netlify/functions",
     "build:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build netlify/functions",
-    "build": "run-p build:lambda build:react"
+    "build": "run-s --openssl-legacy-provider build:lambda build:react"
   },
   "eslintConfig": {
     "extends": [
