@@ -40,8 +40,9 @@ export function* getSnapshotFromUserAuth(userAuth, additionalData) {
 export function* signInWithGoogle() {
   try {
     yield put(loadingStatus(true));
-    const { user } = yield call(signIn, "google");
-    yield call(getSnapshotFromUserAuth, user, "google");
+    const data = yield call(signIn, "google");
+    console.log("data", data);
+    yield call(getSnapshotFromUserAuth, data.user, "google");
   } catch (error) {
     yield put(signInFailed(error));
   }
@@ -77,6 +78,7 @@ export function* isUserAuthenticatedAsync() {
       yield put(loadingStatus(false));
       return;
     }
+    console.log("user", user);
     yield call(getSnapshotFromUserAuth, user, "fromAuth");
   } catch (error) {
     yield put(signInFailed(error));

@@ -19,7 +19,6 @@ const middleWares = [
   sagaMiddleware,
 ].filter(Boolean);
 
-console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 const composedEnhancer =
   (process.env.NODE_ENV !== "production" &&
     window &&

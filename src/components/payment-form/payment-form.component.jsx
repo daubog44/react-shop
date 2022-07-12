@@ -24,6 +24,12 @@ const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
 
+  const checkUser = (e) => {
+    if (!currentUser) {
+      alert("Please log in to make a payment");
+    }
+  };
+
   const paymentHandler = async (e) => {
     e.preventDefault();
     if (!stripe || !elements || !displayName) {
@@ -83,17 +89,17 @@ const PaymentForm = () => {
 
   return (
     <>
-      {displayName && (
+      {
         <PaymentFormContainer className="payment-form">
           <FormContainer onSubmit={paymentHandler}>
             <h2>Credit Card Payment: </h2>
-            <CardElement />
+            <CardElement onChange={checkUser} />
             <PaymentButton isLoading={processingPayment} buttonType="inverted">
               Pay Now
             </PaymentButton>
           </FormContainer>
         </PaymentFormContainer>
-      )}
+      }
     </>
   );
 };

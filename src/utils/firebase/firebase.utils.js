@@ -79,7 +79,6 @@ export const createUserDocumentFromAuth = async (auth, providerId = "auth") => {
   setUserId(analytics, auth.uid);
   let userSnapshot = await getDoc(userDocRef);
   const { displayName, email } = auth;
-  userSnapshot.data().displayName = displayName;
 
   //check if user exists, if exists return document
   if (!userSnapshot.exists()) {
@@ -124,7 +123,6 @@ export const getCurrentUser = () => {
       auth,
       (user) => {
         unsubscribe();
-        console.log("user", user);
         resolve(user);
       },
       reject
