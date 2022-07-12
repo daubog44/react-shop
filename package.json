@@ -25,7 +25,9 @@
     "sass": "^1.53.0",
     "stripe": "^9.12.0",
     "styled-components": "^5.3.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "netlify-lambda": "^2.0.15",
+    "npm-run-all": "^4.1.5"
   },
   "scripts": {
     "start": "concurrently \"react-scripts start\" \"set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve netlify/functions\"",
@@ -36,7 +38,7 @@
     "start:lambda": "set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve netlify/functions",
     "build:lambda:dev": "set NODE_OPTIONS=--openssl-legacy-provider &&netlify-lambda build netlify/functions",
     "build:lambda:prod": "netlify-lambda build netlify/functions",
-    "build": "react-scripts build && set NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda build netlify/functions"
+    "build": "run-p build:lambda:dev build:react"
   },
   "eslintConfig": {
     "extends": [
@@ -60,8 +62,6 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "concurrently": "^7.2.2",
-    "netlify-lambda": "^2.0.15",
-    "npm-run-all": "^4.1.5"
+    "concurrently": "^7.2.2"
   }
 }
