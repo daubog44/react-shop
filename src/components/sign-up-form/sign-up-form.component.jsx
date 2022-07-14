@@ -1,11 +1,13 @@
 import { useState } from "react";
 
+import DisplayMessage from "../display-message/displayMessage.component";
 import FormInput from "../form-input/form-input.component";
 import { SignUpContainer, AuthTitle } from "./sign-up-form.style.jsx";
 import Button from "../../components/button/button.component";
 
-import { useDispatch } from "react-redux";
-import { emailSignupStart } from "../../store/user/user.action";
+import { useDispatch, useSelector } from "react-redux";
+import { selectErrorState } from "../../store/user/user.selector";
+import { emailSignupStart, signInFailed } from "../../store/user/user.action";
 
 const defaultFormFields = {
   displayName: "",
@@ -18,28 +20,21 @@ const SignUpForm = () => {
   const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
+  const error = useSelector(selectErrorState);
+  const [acc, setAcc] = useState(0);
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords don't match");
-      return;
-    }
-
-    try {
-      dispatch(emailSignupStart(email, password, displayName));
-      resetFormFields();
-    } catch (error) {
-      if (error.code === "auth/email-already-in-use") {
-        alert("Email already in use");
-      } else {
-        console.error("Error creating user document", error);
-      }
-    }
+      dispatch(signInFailed("Passwords do not match"));
+      setAcc((prev) => prev + 1);
+    } else dispatch(emailSignupStart(email, password, displayName));
+    resetFormFields();
+    setTimeout(() => setAcc((prev) => prev + 1), 400);
   };
 
   const handleChange = (e) => {
@@ -49,6 +44,9 @@ const SignUpForm = () => {
 
   return (
     <SignUpContainer>
+      {error !== null && (
+        <DisplayMessage type="error" message={error} key={acc} />
+      )}
       <AuthTitle>Don't have an account?</AuthTitle>
       <span>Sign up with your email and password</span>
       <form onSubmit={handleSubmit}>

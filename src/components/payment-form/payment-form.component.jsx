@@ -1,9 +1,6 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
-import {
-  selectCurrentUser,
-  selectLoadingState,
-} from "../../store/user/user.selector";
+import { selectCurrentUser } from "../../store/user/user.selector";
 import { selectCartTotal } from "../../store/cart/cart.selector";
 import {
   PaymentFormContainer,
@@ -11,12 +8,13 @@ import {
   PaymentButton,
 } from "./payment-form.styles";
 import { useState } from "react";
+import DisplayMessage from "../display-message/displayMessage.component";
 
 const PaymentForm = () => {
   const currentUser = useSelector(selectCurrentUser);
-  const loading = useSelector(selectLoadingState);
   const amount = useSelector(selectCartTotal);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [message, setMessage] = useState("");
   let displayName;
   if (currentUser) {
     displayName = currentUser.displayName;
@@ -24,19 +22,28 @@ const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const checkUser = (e) => {
+  if (typeof message === "object") {
+  }
+
+  const checkUser = () => {
     if (!currentUser) {
-      alert("Please log in to make a payment");
+      setMessage({
+        type: "error",
+        message: "You must be logged in to make a payment",
+      });
     }
   };
 
   const paymentHandler = async (e) => {
     e.preventDefault();
-    if (!stripe || !elements || !displayName) {
+    if (!stripe || !elements) {
       return;
     }
-    if (!loading && !currentUser) {
-      alert("Please sign in to continue");
+    if (!currentUser || !displayName) {
+      return setMessage({
+        type: "error",
+        message: "Please sign in to continue",
+      });
     }
     setProcessingPayment(true);
 
@@ -48,9 +55,7 @@ const PaymentForm = () => {
       headers = {
         "Content-Type": "application/json",
       };
-    let t = JSON.stringify(JSON.stringify(body));
-    console.log(JSON.parse(t));
-    // console.log(body, url);
+
     try {
       res = await fetch(url, {
         method: "POST",
@@ -58,10 +63,12 @@ const PaymentForm = () => {
         body: JSON.stringify(body),
       }).then((res) => res.json());
     } catch (error) {
-      alert(error.message);
+      setMessage({
+        type: "error",
+        message: error.message,
+      });
       setProcessingPayment(false);
     }
-    console.log(res);
     const {
       paymentIntent: { client_secret },
     } = res;
@@ -78,17 +85,27 @@ const PaymentForm = () => {
 
     setProcessingPayment(false);
 
-    console.log("paymentIntent", paymentIntent);
     if (paymentIntent.error) {
-      alert(paymentIntent.error.message);
+      setMessage({
+        type: "error",
+        message: paymentIntent.error.message,
+      });
       setProcessingPayment(false);
     } else if (paymentIntent.paymentIntent.status === "succeeded") {
-      alert("Payment successful");
+      setMessage({
+        type: "success",
+        message: "Payment successful",
+      });
     }
   };
 
   return (
     <>
+      {typeof message === "object"
+        ? window.setTimeout(() => setMessage(""), 2000) && (
+            <DisplayMessage type={message.type} message={message.message} />
+          )
+        : null}
       {
         <PaymentFormContainer className="payment-form">
           <FormContainer onSubmit={paymentHandler}>

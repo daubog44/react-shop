@@ -31,7 +31,6 @@ export const userReducer = (state = INITIAL_STATE, action) => {
         isUserLoggedIn: true,
       };
     case USER_ACTIONS_TYPES.SIGN_IN_SUCCESS:
-      console.log("payload", payload);
       return {
         ...state,
         currentUser: payload,

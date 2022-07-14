@@ -33,7 +33,6 @@ export const emailSignupStart = (email, password, displayName) =>
   });
 
 export const signInSuccess = (user) => {
-  console.log("userAction", user);
   return createAction(USER_ACTIONS_TYPES.SIGN_IN_SUCCESS, user);
 };
 

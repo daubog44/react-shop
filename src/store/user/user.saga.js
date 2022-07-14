@@ -30,7 +30,6 @@ export function* getSnapshotFromUserAuth(userAuth, additionalData) {
     if (!snapshot.id) {
       throw new Error("No id");
     }
-    console.log("data", { ...snapshot.data() });
     yield put(signInSuccess({ ...snapshot.data(), id: snapshot.id }));
   } catch (error) {
     yield put(signInFailed(error));
@@ -39,9 +38,8 @@ export function* getSnapshotFromUserAuth(userAuth, additionalData) {
 
 export function* signInWithGoogle() {
   try {
-    yield put(loadingStatus(true));
     const data = yield call(signIn, "google");
-    console.log("data", data);
+
     yield call(getSnapshotFromUserAuth, data.user, "google");
   } catch (error) {
     yield put(signInFailed(error));
@@ -50,7 +48,6 @@ export function* signInWithGoogle() {
 
 export function* signInWithEmailAndPassword(payload) {
   try {
-    yield put(loadingStatus(true));
     const { email, password } = payload;
     const { user } = yield call(
       signInAuthWithEmailAndPassword,
@@ -59,26 +56,27 @@ export function* signInWithEmailAndPassword(payload) {
     );
     yield call(getSnapshotFromUserAuth, user, "sign-in-form");
   } catch (error) {
-    yield put(signInFailed(error));
+    let errorMessage;
     if (error.code === "auth/user-not-found") {
-      alert("User not registered");
+      errorMessage = "User not registered";
     } else if (error.code === "auth/wrong-password") {
-      alert("Wrong password");
+      errorMessage = "Wrong password";
+    } else if (error.code === "auth/too-many-requests") {
+      errorMessage = "Too many requests";
     } else {
-      console.error("Error creating user document", error);
+      errorMessage = error.message;
     }
+    yield put(signInFailed(errorMessage));
   }
 }
 
 export function* isUserAuthenticatedAsync() {
   try {
-    yield put(loadingStatus(true));
     const user = yield call(getCurrentUser);
     if (!user) {
       yield put(loadingStatus(false));
       return;
     }
-    console.log("user", user);
     yield call(getSnapshotFromUserAuth, user, "fromAuth");
   } catch (error) {
     yield put(signInFailed(error));
@@ -87,7 +85,6 @@ export function* isUserAuthenticatedAsync() {
 
 export function* signUpWithEmailAndPassword(payload) {
   try {
-    yield put(loadingStatus(true));
     const { email, password, displayName } = payload;
     const { user } = yield call(
       createAuthUserWithEmailAndPassword,
@@ -98,18 +95,17 @@ export function* signUpWithEmailAndPassword(payload) {
     user.email = email;
     yield call(getSnapshotFromUserAuth, user, "sign-up-form");
   } catch (error) {
-    yield put(signInFailed(error));
     if (error.code === "auth/email-already-in-use") {
-      alert("Email already in use");
+      yield put(signInFailed("Email already in use"));
     } else {
-      console.error("Error creating user document", error);
+      console.error("error", error.code);
+      yield put(signInFailed(error));
     }
   }
 }
 
 export function* signOutUserSaga() {
   try {
-    yield put(loadingStatus(true));
     yield call(signOutUser);
     yield put(signOutSuccess());
   } catch (error) {
@@ -128,18 +124,23 @@ export function* fecthAll() {
     ]);
     switch (type) {
       case USER_ACTIONS_TYPES.CHECK_USER_SESSION:
+        yield put(loadingStatus(true));
         yield fork(isUserAuthenticatedAsync);
         break;
       case USER_ACTIONS_TYPES.SIGNOUT_START:
+        yield put(loadingStatus(true));
         yield fork(signOutUserSaga);
         break;
       case USER_ACTIONS_TYPES.GOOGLE_SIGN_IN_START:
+        yield put(loadingStatus(true));
         yield fork(signInWithGoogle);
         break;
       case USER_ACTIONS_TYPES.EMAIL_SIGN_IN_START:
+        yield put(loadingStatus(true));
         yield fork(signInWithEmailAndPassword, payload);
         break;
       case USER_ACTIONS_TYPES.EMAIL_SIGNUP_START:
+        yield put(loadingStatus(true));
         yield fork(signUpWithEmailAndPassword, payload);
         break;
       default:

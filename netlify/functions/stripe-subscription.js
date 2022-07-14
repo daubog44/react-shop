@@ -21,7 +21,6 @@ const respond = (paymentIntent) => ({
 
 exports.handler = async (event, context) => {
   try {
-    console.log("handler", process.env.STRIPE_SECRET_KEY);
     if (event.httpMethod === "OPTIONS") {
       return {
         statusCode: 200,

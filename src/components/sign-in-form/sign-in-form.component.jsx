@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import DisplayMessage from "../display-message/displayMessage.component";
 import FormInput from "../form-input/form-input.component";
 import { ButtonContainer } from "./sign-in-form.style.jsx";
 import Button from "../button/button.component";
@@ -7,7 +8,8 @@ import {
   SignUpContainer,
   AuthTitle,
 } from "../sign-up-form/sign-up-form.style.jsx";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectErrorState } from "../../store/user/user.selector";
 import {
   googleSignInStart,
   emailSignInStart,
@@ -21,8 +23,10 @@ const defaultFormFields = {
 const SignInForm = () => {
   const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { email, password } = formFields;
+  let errorState = useSelector(selectErrorState);
+  const [acc, setAcc] = useState(0);
 
+  const { email, password } = formFields;
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
@@ -30,21 +34,9 @@ const SignInForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      dispatch(emailSignInStart(email, password));
-      resetFormFields();
-    } catch (error) {
-      switch (error.code) {
-        case "auth/user-not-found":
-          alert("User not found");
-          break;
-        case "auth/wrong-password":
-          alert("Wrong password");
-          break;
-        default:
-          console.error("Error signing in", error);
-      }
-    }
+    dispatch(emailSignInStart(email, password));
+    resetFormFields();
+    setTimeout(() => setAcc((prev) => prev + 1), 400);
   };
 
   const signInWithGoogle = async () => {
@@ -58,6 +50,9 @@ const SignInForm = () => {
 
   return (
     <SignUpContainer>
+      {errorState !== null && (
+        <DisplayMessage key={acc} type="error" message={errorState} />
+      )}
       <AuthTitle>Already have an account?</AuthTitle>
       <span>Sign in with your email and password</span>
       <form onSubmit={handleSubmit}>
