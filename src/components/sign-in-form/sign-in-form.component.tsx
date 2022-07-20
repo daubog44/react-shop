@@ -4,7 +4,11 @@ import DisplayMessage from "../display-message/displayMessage.component";
 import FormInput from "../form-input/form-input.component";
 import { ButtonContainer } from "./sign-in-form.style";
 import Button from "../button/button.component";
-import { SignUpContainer, AuthTitle } from "../sign-up-form/sign-up-form.style";
+import {
+  SignUpContainer,
+  AuthTitle,
+  SubTitleAuth,
+} from "../sign-up-form/sign-up-form.style";
 import { useDispatch, useSelector } from "react-redux";
 import { selectErrorState } from "../../store/user/user.selector";
 import {
@@ -47,11 +51,18 @@ const SignInForm = () => {
 
   return (
     <SignUpContainer>
-      {errorState !== null && (
-        <DisplayMessage key={acc} type="error" message={errorState as string} />
+      {errorState !== null &&
+      errorState instanceof Error &&
+      errorState.message !== "Firebase: Error (auth/popup-closed-by-user)." ? (
+        <DisplayMessage key={acc} type="error" message={errorState.message} />
+      ) : (
+        typeof errorState === "string" &&
+        errorState !== null && (
+          <DisplayMessage key={acc} type="error" message={errorState} />
+        )
       )}
       <AuthTitle>Already have an account?</AuthTitle>
-      <span>Sign in with your email and password</span>
+      <SubTitleAuth>Sign in with your email and password</SubTitleAuth>
       <form onSubmit={(e) => handleSubmit(e)}>
         <FormInput
           label="Email"

@@ -8,20 +8,35 @@ import {
   selectIsCategoryLoading,
 } from "../../store/categories-home/categories-home.selector";
 import Spinner from "../../components/spinner/spinner.component";
-import type { CategoryHome } from "../../store/categories-home/categories-home.types";
+import type {
+  CategoryHome,
+  CategoryHomeMap,
+} from "../../store/categories-home/categories-home.types";
 
 function Home() {
   const dispatch = useDispatch();
   const categoriesHome = useSelector(selectCategoriesHome);
   const isLoading = useSelector(selectIsCategoryLoading);
+
   useEffect(() => {
-    dispatch(fetchCategoriesHomeStart());
-  }, [dispatch]);
+    if (Object.keys(categoriesHome).length === 0) {
+      dispatch(fetchCategoriesHomeStart());
+    }
+  }, [dispatch, categoriesHome]);
 
   const checkIfUnknown = (
-    categoriesHome: unknown | CategoryHome[]
-  ): categoriesHome is CategoryHome[] => {
-    return Array.isArray(categoriesHome);
+    categoriesHome: unknown | CategoryHomeMap
+  ): categoriesHome is CategoryHomeMap => {
+    return categoriesHome !== undefined;
+  };
+
+  const modifiedData = () => {
+    const values = Object.values(categoriesHome);
+    const arr: CategoryHome[] = [];
+    values.forEach((value: CategoryHome) => {
+      arr.push(value);
+    });
+    return arr;
   };
 
   return (
@@ -31,7 +46,7 @@ function Home() {
         <Spinner />
       ) : (
         checkIfUnknown(categoriesHome) && (
-          <Categories categoriesHome={categoriesHome} />
+          <Categories categoriesHome={modifiedData()} />
         )
       )}
     </div>

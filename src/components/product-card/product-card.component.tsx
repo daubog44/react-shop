@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { FC } from "react";
 import type { CategoryItem } from "../../store/categories/categories.types";
 import type { CartItem } from "../../store/cart/cart.types";
 import {

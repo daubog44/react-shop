@@ -5,7 +5,6 @@ import {
   selectIsCartOpen,
   selectCartItemCount,
 } from "../../store/cart/cart.selector";
-
 import { setIsCartOpenAction } from "../../store/cart/cart.action";
 
 const CartIcons = () => {

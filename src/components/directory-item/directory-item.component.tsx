@@ -11,10 +11,10 @@ const DirectoryItem: FC<DirectoryItemProps> = ({ category }) => {
 
   return (
     <DirectoryItemContainer to={`/shop/${title}`}>
-      <div
+       <div
         className="background-image"
         style={{ backgroundImage: `url(${imageUrl})`, objectFit: "cover" }}
-      />
+      /> 
       <div className="directory-item-body">
         <h2>{title}</h2>
         <p>Shop Now</p>

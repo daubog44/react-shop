@@ -8,7 +8,6 @@ type displeyMessageProps = {
 
 const DisplayMessage: FC<displeyMessageProps> = function ({ type, message }) {
   const [visible, setVisible] = useState(true);
-
   useEffect(() => {
     const id = setTimeout(() => {
       setVisible(false);

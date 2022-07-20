@@ -8,6 +8,9 @@ body {
     "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  @media screen and (max-width: 768px) {
+    padding: 10px;
+  }
 }
 
 code {

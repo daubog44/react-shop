@@ -2,7 +2,7 @@ import { useState, FormEvent, ChangeEvent } from "react";
 
 import DisplayMessage from "../display-message/displayMessage.component";
 import FormInput from "../form-input/form-input.component";
-import { SignUpContainer, AuthTitle } from "./sign-up-form.style";
+import { SignUpContainer, AuthTitle, SubTitleAuth } from "./sign-up-form.style";
 import Button from "../button/button.component";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -44,11 +44,11 @@ const SignUpForm = () => {
 
   return (
     <SignUpContainer>
-      {error !== null && (
+      {/* {error !== null && (
         <DisplayMessage type="error" message={error as string} key={acc} />
-      )}
+      )} */}
       <AuthTitle>Don't have an account?</AuthTitle>
-      <span>Sign up with your email and password</span>
+      <SubTitleAuth>Sign up with your email and password</SubTitleAuth>
       <form onSubmit={handleSubmit}>
         <FormInput
           label="Display Name"

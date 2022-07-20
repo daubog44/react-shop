@@ -7,6 +7,11 @@ export const NavigationContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 25px;
+  @media screen and (max-width: 768px) {
+    height: 60px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
 `;
 
 // styled(Link), because we want to use the Link component from react-router-dom to create the links in the navigation bar, from props
@@ -17,6 +22,10 @@ export const LogoContainer = styled(Link)`
   ${(props) => {
     return "padding: 25px;";
   }}
+  @media screen and (max-width: 768px) {
+    width: 50px;
+    padding: 0;
+  }
 `;
 
 export const NavLinksContainer = styled.div`
@@ -25,6 +34,9 @@ export const NavLinksContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  @media screen and (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 export const NavLink = styled(Link)`

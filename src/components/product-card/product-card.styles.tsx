@@ -62,12 +62,34 @@ export const ImageCardContainer = styled.img`
   margin-bottom: 5px;
 `;
 
+// type ImageCardContainerProps = {
+//   src: string;
+//   alt: string;
+// };
+
+// export const ImageCardContainer = styled.div<ImageCardContainerProps>`
+//   background-image: url(${(props) => props.src});
+//   background-size: cover;
+//   background-position: center;
+//   object-fit: cover;
+//   width: 100%;
+//   height: clamp(250px, 330px, 400px);
+//   object-fit: cover;
+//   margin-bottom: 5px;
+// `;
+
 export const ButtonCardContainer = styled(Button)`
   width: 80%;
   opacity: 0.7;
   position: absolute;
   top: 255px;
   display: none;
+  @media screen and (max-width: 768px) {
+    min-width: unset;
+    opacity: 0.9;
+    display: block;
+    padding: 0px 10px;
+  }
 `;
 
 export const FooterCardContainer = styled.div`

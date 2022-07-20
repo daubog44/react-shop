@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { FC, memo } from "react";
 import type { CartItem } from "../../store/cart/cart.types";
 import CheckoutItemContainer from "./checkout-item.styles";
 import { getAnalytics, logEvent } from "firebase/analytics";
@@ -16,7 +16,7 @@ type CheckoutItemProps = {
   cartItem: CartItem;
 };
 
-const CheckoutItem: FC<CheckoutItemProps> = ({ cartItem }) => {
+const CheckoutItem: FC<CheckoutItemProps> = memo(({ cartItem }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const addItemToCart = (cartItem: CartItem) =>
@@ -68,6 +68,6 @@ const CheckoutItem: FC<CheckoutItemProps> = ({ cartItem }) => {
       </div>
     </CheckoutItemContainer>
   );
-};
+});
 
 export default CheckoutItem;

@@ -4,7 +4,7 @@ import {
   selectCartItems,
   selectCartTotal,
 } from "../../store/cart/cart.selector";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { CartDropdownContainer, EmptyMessage } from "./cart-dropdown.styles";
 import Button from "../button/button.component";
 import CartItemFC from "../cart-item/cart-item.component";
@@ -20,14 +20,14 @@ const CartDropdown = () => {
 
   const navigate = useNavigate();
 
-  const goToCheckoutHandler = () => {
+  const goToCheckoutHandler = useCallback(() => {
     logEvent<string>(analytics, "begin_checkout", {
       currency: "USD",
       value: cartTotal,
       items: cartItems,
     });
     navigate("/checkout");
-  };
+  }, [cartTotal, cartItems]);
 
   useEffect(() => {
     if (isCartOpen)

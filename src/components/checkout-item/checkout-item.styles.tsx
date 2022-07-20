@@ -18,6 +18,7 @@ export default styled.div`
       height: 100%;
     }
   }
+
   .name,
   .quantity,
   .price {
@@ -33,6 +34,12 @@ export default styled.div`
 
     .value {
       margin: 0 10px;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    .name {
+      font-size: 14px;
     }
   }
 
