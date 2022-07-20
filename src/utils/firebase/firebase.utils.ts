@@ -89,23 +89,29 @@ export const getCategoriesAndDocuments = async (
 export type Auth = { displayName?: string; email?: string } & User;
 
 export type UserData = {
-  createdAt: Date;
+  createdAt?: Date;
   displayName: string;
   email: string;
 };
 
 export const createUserDocumentFromAuth = async (
   auth: Auth | User,
-  providerId = "auth"
+  providerId = "auth",
+  additionalData?: UserData
 ): Promise<QueryDocumentSnapshot<UserData> | void> => {
   if (!auth) return;
   const userDocRef = doc(db, "users", auth.uid);
   setUserId(analytics, auth.uid);
   let userSnapshot = await getDoc(userDocRef);
-  const { displayName, email } = auth;
 
   //check if user exists, if exists return document
   if (!userSnapshot.exists()) {
+    let displayName, email;
+    if (additionalData) {
+      displayName = additionalData.displayName;
+      email = additionalData.email;
+    }
+    console.log(additionalData);
     const createdAt = new Date().toLocaleDateString();
     logEvent(analytics, "sign_up", { method: providerId });
 

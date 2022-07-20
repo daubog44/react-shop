@@ -1,5 +1,5 @@
 import { call, put, all, take } from "typed-redux-saga/macro";
-import { Auth } from "../../utils/firebase/firebase.utils";
+import { Auth, UserData } from "../../utils/firebase/firebase.utils";
 import { User, UserCredential } from "firebase/auth";
 import { FirebaseError } from "@firebase/util";
 
@@ -27,13 +27,17 @@ import {
 
 export function* getSnapshotFromUserAuth(
   userAuth: Auth | User,
-  additionalData?: string
+  type?: string,
+  additionalData?: UserData
 ) {
   try {
     let snapshot = yield* call(
       createUserDocumentFromAuth,
       userAuth,
-      additionalData
+      type,
+      additionalData && Object.hasOwn(additionalData, "displayName" || "email")
+        ? additionalData
+        : undefined
     );
     if (!snapshot) throw new Error("No data");
     if (!snapshot.id) {
@@ -113,9 +117,13 @@ export function* signUpWithEmailAndPassword(
     );
     if (userCredentials) {
       const { user } = userCredentials as UserCredential;
-      user.displayName = displayName;
-      user.email = email;
-      yield* call(getSnapshotFromUserAuth, user, "sign-up-form");
+      const additionalData: UserData = { displayName, email };
+      yield* call(
+        getSnapshotFromUserAuth,
+        user,
+        "sign-up-form",
+        additionalData
+      );
     }
   } catch (error) {
     let errorMessage;
